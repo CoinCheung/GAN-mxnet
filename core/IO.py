@@ -4,7 +4,7 @@
 import mxnet as mx
 import numpy as np
 import config
-import plot
+import core.visualize
 
 
 
@@ -19,6 +19,12 @@ def get_mnist_iter():
 
 
 if __name__ == '__main__':
+    import os
+    import sys
+    sys.path.append(os.path.abspath(os.curdir))
+    sys.path.append(os.path.abspath(os.curdir)+'/..')
+    sys.path.append(os.path.abspath(os.curdir)+'/../core')
+
     nmist_iter = get_mnist_iter()
 
     for batch in nmist_iter:
@@ -26,7 +32,7 @@ if __name__ == '__main__':
 
         img = np.ceil((b0.asnumpy()+1)*128).astype(np.uint8)
         print(img)
-        plot.show_image(img)
+        visulize.show_image(img)
 
 
         break
