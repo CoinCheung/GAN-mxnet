@@ -4,7 +4,7 @@
 import mxnet as mx
 import symbol.discriminator
 import symbol.generator
-import core.IO
+import core.DataIter
 import config
 
 

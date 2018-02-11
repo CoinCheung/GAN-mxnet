@@ -18,6 +18,20 @@ def get_mnist_iter():
     return train_data
 
 
+
+def gen_noise_uniform(shape, bound):
+    '''
+    generate a unified noise symbol with given shape
+    params:
+        shape: a tuple of the noise matrix shape of (batch_size, noise_dim)
+        bound: list or tuple, the bound of the noises
+    return:
+        a nd array
+    '''
+    return mx.nd.random.uniform(bound[0], bound[1], shape=shape)
+
+
+
 if __name__ == '__main__':
     import os
     import sys
@@ -36,3 +50,4 @@ if __name__ == '__main__':
 
 
         break
+
