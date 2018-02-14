@@ -3,14 +3,21 @@
 
 import mxnet as mx
 import numpy as np
-import config
+import core.config as config
 import core.visualize
+from cffi.cwrapper import ffi, lib
 
 
+def trans(data, label):
+    data = mx.img.imresize(data,64,64)
+    data = mx.nd.transpose(data.astype(np.float32)/127.5-1, axes=(2,0,1))
+    label.astype(np.uint8)
+    return data, label
 
 
 def get_mnist_iter():
-    trans = lambda data, label: (mx.nd.transpose(data.astype(np.float32)/128-1, axes=(2,0,1)), label.astype(np.uint8))
+    #  trans = lambda data, label: (data.astype(np.float32)/128-1, label.astype(np.uint8))
+    #  trans = lambda data, label: (mx.nd.transpose(data.astype(np.float32)/128-1, axes=(2,0,1)), label.astype(np.uint8))
 
     mnist_train = mx.gluon.data.vision.MNIST(root='~/.mxnet/datasets/mnist/', train=True, transform=trans)
     train_data = mx.gluon.data.DataLoader(mnist_train, config.batch_size, shuffle=True)

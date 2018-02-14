@@ -3,11 +3,11 @@
 
 import mxnet as mx
 import numpy as np
-import config
+import core.config as config
 import core.visualize
 
 
-def generator_usual(noise, batch_size, test, eps):
+def generator_usual(noise, batch_size, img_channels, test, eps):
     '''
     generator of the GAN basing on deconvolution layers.
     The structure is:
@@ -30,18 +30,23 @@ def generator_usual(noise, batch_size, test, eps):
     relu1 = mx.sym.Activation(fc1, act_type='relu', name='gen_relu1')
     bn1 = mx.sym.BatchNorm(relu1, fix_gamma=False,use_global_stats=test, eps=eps, name='gen_bn1')
 
-    fc2 = mx.sym.FullyConnected(bn1, num_hidden=7*7*128, no_bias=False, name='gen_fc2')
+    fc2 = mx.sym.FullyConnected(bn1, num_hidden=8*8*128, no_bias=False, name='gen_fc2')
     relu2 = mx.sym.Activation(fc2, act_type='relu', name='gen_relu2')
     bn2 = mx.sym.BatchNorm(relu2, fix_gamma=False,use_global_stats=test, eps=eps, name='gen_bn2')
 
-    conv_input = bn2.reshape(shape=(batch_size,128,7,7), name='gen_reshape1')
-
+    conv_input = bn2.reshape(shape=(batch_size,128,8,8), name='gen_reshape1')
+    # 128x8x8
     trans_conv1 = mx.sym.Deconvolution(conv_input, kernel=(4,4), stride=(2,2), pad=(1,1), num_filter=64,name="gen_trans_conv1")
     relu3 = mx.sym.Activation(trans_conv1, act_type='relu', name='gen_relu3')
     bn3 = mx.sym.BatchNorm(relu3, fix_gamma=False, use_global_stats=test, eps=eps, name='gen_bn3')
-
-    trans_conv2 = mx.sym.Deconvolution(bn3, kernel=(4,4), stride=(2,2), pad=(1,1), num_filter=1,name="gen_trans_conv2")
-    tanh1 = mx.sym.Activation(trans_conv2, act_type='tanh', name='gen_tanh1')
+    # 64x16x16
+    trans_conv2 = mx.sym.Deconvolution(bn3, kernel=(4,4), stride=(2,2), pad=(1,1), num_filter=32,name="gen_trans_conv2")
+    relu4 = mx.sym.Activation(trans_conv2, act_type='relu', name='gen_relu4')
+    bn4 = mx.sym.BatchNorm(relu4, fix_gamma=False, use_global_stats=test, eps=eps, name='gen_bn4')
+    # 32x32x32
+    trans_conv3 = mx.sym.Deconvolution(bn4, kernel=(4,4), stride=(2,2), pad=(1,1), num_filter=img_channels,name="gen_trans_conv3")
+    tanh1 = mx.sym.Activation(trans_conv3, act_type='tanh', name='gen_tanh1')
+    # ncx64x64
 
     out = tanh1
 
@@ -52,7 +57,8 @@ def generator_conv(noise, batch_size, nc, test, eps):
     '''
         symbol noise has a shape of batch_sizexncx1x1
     '''
-    trans_conv1 = mx.sym.Deconvolution(noise, kernel=(4,4), stride=(0,0), pad=(0,0), num_filter=256, name='gen_trans_conv1')
+    # 100x1x1
+    trans_conv1 = mx.sym.Deconvolution(noise, kernel=(4,4), stride=(1,1), pad=(0,0), num_filter=256, name='gen_trans_conv1')
     bn1 = mx.sym.BatchNorm(trans_conv1, fix_gamma=False, use_global_stats=test, eps=eps, name='gen_bn1')
     relu1 = mx.sym.Activation(bn1, act_type='relu', name='gen_relu1')
     # 4x4x256
@@ -71,7 +77,7 @@ def generator_conv(noise, batch_size, nc, test, eps):
     trans_conv5 = mx.sym.Deconvolution(relu4, kernel=(4,4), stride=(2,2), pad=(1,1), num_filter=nc, name='gen_trans_conv5')
     # 64x64xnc
 
-    tanh = mx.sym.Activation(trans_conv2, act_type='tanh', name='gen_output')
+    tanh = mx.sym.Activation(trans_conv5, act_type='tanh', name='gen_output')
 
     return tanh
 

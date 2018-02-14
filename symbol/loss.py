@@ -5,7 +5,7 @@ import mxnet as mx
 import symbol.discriminator
 import symbol.generator
 import core.DataIter
-import config
+import core.config as config
 
 
 
@@ -43,13 +43,16 @@ def sigmoid_cross_entropy(logits, label, batch_size):
     '''
     used in binary case naturally
     '''
-    logits_sigmoid = mx.sym.sigmoid(logits)
+    logits_sigmoid = mx.sym.sigmoid(logits).reshape(shape=(-1, 1))
     logits_sigmoid_log_real = mx.sym.log(logits_sigmoid)
     logits_sigmoid_log_fake = mx.sym.log(1-logits_sigmoid)
     product = mx.sym.broadcast_mul(logits_sigmoid_log_real, label) + \
         mx.sym.broadcast_mul(logits_sigmoid_log_fake, 1-label)
     CE = -mx.sym.sum(product)/batch_size
     return [CE, logits_sigmoid]
+    #  return CE, mx.sym.broadcast_mul(logits_sigmoid_log_fake, 1-label)
+    #  return CE, mx.sym.broadcast_mul(logits_sigmoid_log_real, label)
+    #  return CE, logits_sigmoid_log_real
 
 
 
