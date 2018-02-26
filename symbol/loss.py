@@ -46,13 +46,10 @@ def sigmoid_cross_entropy(logits, label, batch_size):
     logits_sigmoid = mx.sym.sigmoid(logits).reshape(shape=(-1, 1))
     logits_sigmoid_log_real = mx.sym.log(logits_sigmoid)
     logits_sigmoid_log_fake = mx.sym.log(1-logits_sigmoid)
-    product = mx.sym.broadcast_mul(logits_sigmoid_log_real, label) + \
-        mx.sym.broadcast_mul(logits_sigmoid_log_fake, 1-label)
+    product = logits_sigmoid_log_real*label + logits_sigmoid_log_fake*(1-label)
     CE = -mx.sym.sum(product)/batch_size
+
     return [CE, logits_sigmoid]
-    #  return CE, mx.sym.broadcast_mul(logits_sigmoid_log_fake, 1-label)
-    #  return CE, mx.sym.broadcast_mul(logits_sigmoid_log_real, label)
-    #  return CE, logits_sigmoid_log_real
 
 
 

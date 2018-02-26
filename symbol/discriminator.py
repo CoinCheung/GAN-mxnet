@@ -36,27 +36,29 @@ def discriminator_usual(img, label, batch_size, leaky_slope):
     return out
 
 
-def discriminator_conv(img, label, batch_size, test, eps, leaky_slope):
+def discriminator_conv(img, label, batch_size, eps, leaky_slope):
     '''
         input image shape should be 64x64xnc
         TODO: make clear the layout of the tensor
     '''
+    # TODO: see if fix_gamma = False can also do
+    fix_gamma = True
     # 64x64xnc
-    conv1 = mx.sym.Convolution(img, num_filter=32, kernel=(4,4), stride=(2,2), pad=(1,1), no_bias=True, name='dis_conv1')
+    conv1 = mx.sym.Convolution(img, num_filter=128, kernel=(4,4), stride=(2,2), pad=(1,1), no_bias=True, name='dis_conv1')
     leaky1 = mx.sym.LeakyReLU(conv1, act_type='leaky', slope=leaky_slope, name='dis_leaky1')
-    # 32x32x32
-    conv2 = mx.sym.Convolution(leaky1, num_filter=64, kernel=(4,4), stride=(2,2), pad=(1,1), no_bias=True, name='dis_conv2')
-    bn1 = mx.sym.BatchNorm(conv2, fix_gamma=True, use_global_stats=test, eps=eps, name='dis_bn1')
+    # 32x32x128
+    conv2 = mx.sym.Convolution(leaky1, num_filter=256, kernel=(4,4), stride=(2,2), pad=(1,1), no_bias=True, name='dis_conv2')
+    bn1 = mx.sym.BatchNorm(conv2, fix_gamma=fix_gamma, eps=eps, name='dis_bn1')
     leaky2 = mx.sym.LeakyReLU(bn1, act_type='leaky', slope=leaky_slope, name='dis_leaky2')
-    # 16x16x64
-    conv3 = mx.sym.Convolution(leaky2, num_filter=128, kernel=(4,4), stride=(2,2), pad=(1,1), no_bias=True, name='dis_conv3')
-    bn2 = mx.sym.BatchNorm(conv3, fix_gamma=False, use_global_stats=test, eps=eps, name='dis_bn2')
+    # 16x16x256
+    conv3 = mx.sym.Convolution(leaky2, num_filter=512, kernel=(4,4), stride=(2,2), pad=(1,1), no_bias=True, name='dis_conv3')
+    bn2 = mx.sym.BatchNorm(conv3, fix_gamma=fix_gamma, eps=eps, name='dis_bn2')
     leaky3 = mx.sym.LeakyReLU(bn2, act_type='leaky', slope=leaky_slope, name='dis_leaky3')
-    # 8x8x128
-    conv4 = mx.sym.Convolution(leaky3, num_filter=256, kernel=(4,4), stride=(2,2), pad=(1,1), no_bias=True, name='dis_conv4')
-    bn3 = mx.sym.BatchNorm(conv4, fix_gamma=False, use_global_stats=test, eps=eps, name='dis_bn3')
+    # 8x8x512
+    conv4 = mx.sym.Convolution(leaky3, num_filter=1024, kernel=(4,4), stride=(2,2), pad=(1,1), no_bias=True, name='dis_conv4')
+    bn3 = mx.sym.BatchNorm(conv4, fix_gamma=fix_gamma, eps=eps, name='dis_bn3')
     leaky4 = mx.sym.LeakyReLU(bn3, act_type='leaky', slope=leaky_slope, name='dis_leaky4')
-    # 4x4x256
+    # 4x4x1024
     conv5 = mx.sym.Convolution(leaky4, num_filter=1, kernel=(4,4), stride=(1,1), pad=(0,0), no_bias=True, name='dis_conv5')
     #  logits = mx.sym.Convolution(leaky3, num_filter=1, kernel=(8,8), stride=(1,1), pad=(0,0), no_bias=True, name='dis_out')
 

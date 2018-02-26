@@ -7,7 +7,6 @@ import os
 import symbol.generator as generator
 import core.config as config
 import core.visualize as visualize
-import record.save as save
 import core.module as module
 import core.meric as meric
 import core.DataIter as DI
@@ -21,7 +20,7 @@ def train_gan(draw=True):
     batch_size = config.batch_size
     noise_shape = config.noise_shape
     save_epoch_num = config.save_each_epoch
-    save_path = ''.join([os.getcwd(), '/record/'])
+    save_path = ''.join([os.getcwd(), '/model_export/'])
 
 
     ## get modules

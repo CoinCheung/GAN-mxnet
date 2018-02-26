@@ -10,7 +10,6 @@ import core.config as config
 def get_usual_modules():
     # parameters
     eps = config.bn_eps
-    test = config.is_test
     batch_size = config.batch_size
     noise_shape = config.noise_shape
     img_shape = config.img_shape
@@ -26,7 +25,7 @@ def get_usual_modules():
     img = mx.sym.var('image')
     label = mx.sym.var('label')
     noise = mx.sym.var("noise")
-    gen_batch_sym = generator.generator_usual(noise, batch_size, nc, test, eps)
+    gen_batch_sym = generator.generator_usual(noise, batch_size, nc, eps)
     dis_sigmoid_loss = discriminator.discriminator_usual(img, label, batch_size*2, lky_slope)
     ## modules
     # generator
@@ -46,7 +45,6 @@ def get_usual_modules():
 def get_dc_modules():
     # parameters
     eps = config.bn_eps
-    test = config.is_test
     batch_size = config.batch_size
     noise_shape = config.noise_shape
     img_shape = config.img_shape
@@ -61,8 +59,8 @@ def get_dc_modules():
     img = mx.sym.var('image')
     label = mx.sym.var('label')
     noise = mx.sym.var("noise")
-    gen_batch_sym = generator.generator_conv(noise, batch_size, nc, test, eps)
-    dis_sigmoid_loss = discriminator.discriminator_conv(img, label, batch_size*2, test, eps, lky_slope)
+    gen_batch_sym = generator.generator_conv(noise, batch_size, nc, eps)
+    dis_sigmoid_loss = discriminator.discriminator_conv(img, label, batch_size*2, eps, lky_slope)
     ## modules
     # generator
     gen = mx.mod.Module(gen_batch_sym, context=mx.gpu(), data_names=['noise'], label_names=None)
