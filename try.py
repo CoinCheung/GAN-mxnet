@@ -46,4 +46,10 @@ out_val = mod.get_outputs()[0].asnumpy()
 print(out_val)
 
 
+class Myclass(object):
+    def __init__(self):
+        self._name = 'coin'
 
+
+mc = Myclass()
+print(mc._name)

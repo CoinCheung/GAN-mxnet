@@ -3,11 +3,11 @@
     when it works with usual discriminator and generator, a weigth_decay of 1e-4 works generally better
 '''
 
-GAN_type = 'usual_gan'
-#  GAN_type = 'dc_gan'
+#  discriminator_type = 'lenet5'
+discriminator_type = 'deep_convolution'
 
 # layer symbol parameters
-bn_eps = 1e-5
+bn_eps = 1e-5 + 1e-12
 leaky_slope = 0.2
 
 
@@ -29,11 +29,11 @@ save_each_epoch = 5
 gen_optimizer = 'adam'
 dis_optimizer = 'adam'
 # normal gan
-#  gen_optimizer_params = (('learning_rate', 2e-4), ('beta1',0.5), ('wd', 1e-4))
-#  dis_optimizer_params = (('learning_rate',2e-4),('beta1', 0.5),('wd', 1e-4))
+gen_optimizer_params = (('learning_rate', 2e-4), ('beta1',0.5), ('wd', 1e-4))
+dis_optimizer_params = (('learning_rate',2e-4),('beta1', 0.5),('wd', 1e-4))
 
-# dc gan
-gen_optimizer_params = (('learning_rate', 2e-4), ('beta1',0.5), ('wd', 0))
-dis_optimizer_params = (('learning_rate',2e-4),('beta1', 0.5),('wd', 0))
+#  # dc gan
+#  gen_optimizer_params = (('learning_rate', 2e-4), ('beta1',0.5), ('wd', 0))
+#  dis_optimizer_params = (('learning_rate',2e-4),('beta1', 0.5),('wd', 0))
 
 

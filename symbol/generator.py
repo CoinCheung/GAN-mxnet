@@ -7,7 +7,7 @@ import core.config as config
 import core.visualize
 
 
-def generator_usual(noise, batch_size, img_channels, eps):
+def generator_lenet5(noise, batch_size, img_channels, eps):
     '''
     generator of the GAN basing on deconvolution layers.
     The structure is:

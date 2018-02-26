@@ -7,7 +7,7 @@ import symbol.generator as generator
 import core.config as config
 
 
-def get_usual_modules():
+def get_lenet5_modules():
     # parameters
     eps = config.bn_eps
     batch_size = config.batch_size
@@ -18,27 +18,39 @@ def get_usual_modules():
     opt_dis = config.dis_optimizer
     gen_optimizer_params = config.gen_optimizer_params
     dis_optimizer_params = config.dis_optimizer_params
-    Gan_type = config.GAN_type
     nc = img_shape[1]
 
     ## syms
     img = mx.sym.var('image')
     label = mx.sym.var('label')
     noise = mx.sym.var("noise")
-    gen_batch_sym = generator.generator_usual(noise, batch_size, nc, eps)
-    dis_sigmoid_loss = discriminator.discriminator_usual(img, label, batch_size*2, lky_slope)
+    gen_batch_sym = generator.generator_lenet5(noise, batch_size, nc, eps)
+    dis_sigmoid_loss = discriminator.discriminator_lenet5(img, label, batch_size*2, lky_slope)
     ## modules
     # generator
     gen = mx.mod.Module(gen_batch_sym, context=mx.gpu(), data_names=['noise'], label_names=None)
-    gen.bind(data_shapes=[('noise',noise_shape)], label_shapes=None, inputs_need_grad=True)
+    gen.bind(
+        data_shapes=[('noise',noise_shape)],
+        label_shapes=None
+    )
     gen.init_params(initializer=mx.initializer.Xavier())
-    gen.init_optimizer(optimizer=opt_gen, optimizer_params=gen_optimizer_params)
+    gen.init_optimizer(
+        optimizer=opt_gen,
+        optimizer_params=gen_optimizer_params
+    )
 
     # discriminator
     dis = mx.mod.Module(dis_sigmoid_loss, context=mx.gpu(), data_names=['image'], label_names=['label'])
-    dis.bind(data_shapes=[('image',(batch_size*2, nc, 64, 64))], label_shapes=[('label',(batch_size*2,1))], inputs_need_grad=True)
+    dis.bind(
+        data_shapes=[('image',(batch_size*2, nc, 64, 64))],
+        label_shapes=[('label',(batch_size*2,1))],
+        inputs_need_grad=True
+    )
     dis.init_params(initializer=mx.initializer.Xavier())
-    dis.init_optimizer(optimizer=opt_dis, optimizer_params=dis_optimizer_params)
+    dis.init_optimizer(
+        optimizer=opt_dis,
+        optimizer_params=dis_optimizer_params
+    )
 
     return gen, dis
 
@@ -64,29 +76,42 @@ def get_dc_modules():
     ## modules
     # generator
     gen = mx.mod.Module(gen_batch_sym, context=mx.gpu(), data_names=['noise'], label_names=None)
-    gen.bind(data_shapes=[('noise',noise_shape)], label_shapes=None, inputs_need_grad=True)
-    gen.init_params(initializer=mx.init.Normal(0.02))
-    #  gen.init_params(initializer=mx.init.Xavier())
-    gen.init_optimizer(optimizer=opt_gen, optimizer_params=gen_optimizer_params)
+    gen.bind(
+        data_shapes=[('noise',noise_shape)],
+        label_shapes=None
+    )
+    #  gen.init_params(initializer=mx.init.Normal(0.02))
+    gen.init_params(initializer=mx.init.Xavier())
+    gen.init_optimizer(
+        optimizer=opt_gen,
+        optimizer_params=gen_optimizer_params
+    )
 
     # discriminator
     dis = mx.mod.Module(dis_sigmoid_loss, context=mx.gpu(), data_names=['image'], label_names=['label'])
-    dis.bind(data_shapes=[('image',(batch_size*2, nc, 64, 64))], label_shapes=[('label',(batch_size*2,1))], inputs_need_grad=True)
-    dis.init_params(initializer=mx.init.Normal(0.02))
-    #  dis.init_params(initializer=mx.init.Xavier())
-    dis.init_optimizer(optimizer=opt_dis, optimizer_params=dis_optimizer_params)
+    dis.bind(
+        data_shapes=[('image',(batch_size*2, nc, 64, 64))],
+        label_shapes=[('label',(batch_size*2,1))],
+        inputs_need_grad=True
+    )
+    #  dis.init_params(initializer=mx.init.Normal(0.02))
+    dis.init_params(initializer=mx.init.Xavier())
+    dis.init_optimizer(
+        optimizer=opt_dis,
+        optimizer_params=dis_optimizer_params
+    )
 
     return gen, dis
 
 
 def get_modules():
     # control params
-    Gan_type = config.GAN_type
+    discriminator_type = config.discriminator_type
 
-    if Gan_type == 'usual_gan':
-        return get_usual_modules()
+    if discriminator_type == 'lenet5':
+        return get_lenet5_modules()
 
-    elif Gan_type == 'dc_gan':
+    elif discriminator_type == 'deep_convolution':
         return get_dc_modules()
 
 

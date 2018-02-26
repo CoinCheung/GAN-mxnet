@@ -6,7 +6,7 @@ import numpy as np
 import symbol.loss as loss
 
 
-def discriminator_usual(img, label, batch_size, leaky_slope):
+def discriminator_lenet5(img, label, batch_size, leaky_slope):
 
     # ncx64x64
     conv1 = mx.sym.Convolution(img, num_filter=32, kernel=(5,5), stride=(1,1), pad=(0,0), no_bias=True, name='dis_conv1')
@@ -21,14 +21,15 @@ def discriminator_usual(img, label, batch_size, leaky_slope):
     leaky3 = mx.sym.LeakyReLU(conv3, act_type='leaky', slope=leaky_slope, name='dis_leaky_relu3')
     maxpool3 = mx.sym.Pooling(leaky3, kernel=(2,2), pool_type='max', stride=[2,2], name='dis_max_pooling3')
     # 8x8x128
-    reshaped = mx.sym.reshape(maxpool3, shape=(batch_size, -1))
+    #  reshaped = mx.sym.reshape(maxpool3, shape=(batch_size, -1))
+    flatten = mx.sym.Flatten(maxpool3)
 
-    fc1 = mx.sym.FullyConnected(maxpool2, num_hidden=4*4*64, no_bias=False, flatten=True, name='dis_fc1')
+    fc1 = mx.sym.FullyConnected(flatten, num_hidden=4*4*64, no_bias=False, flatten=True, name='dis_fc1')
     leaky3 = mx.sym.LeakyReLU(fc1, act_type='leaky', slope=leaky_slope, name='dis_leaky_relu3')
 
     fc2 = mx.sym.FullyConnected(leaky3, num_hidden=1, no_bias=False, flatten=True, name='dis_fc2')
 
-    CE, logits_sigmoid = loss.sigmoid_cross_entropy(fc2, label, batch_size)
+    CE, logits_sigmoid = loss.sigmoid_cross_entropy(fc2, label)
 
     CE_loss = mx.sym.MakeLoss(CE)
     out = mx.sym.Group([CE_loss, mx.sym.BlockGrad(logits_sigmoid)])
@@ -60,46 +61,19 @@ def discriminator_conv(img, label, batch_size, eps, leaky_slope):
     leaky4 = mx.sym.LeakyReLU(bn3, act_type='leaky', slope=leaky_slope, name='dis_leaky4')
     # 4x4x1024
     conv5 = mx.sym.Convolution(leaky4, num_filter=1, kernel=(4,4), stride=(1,1), pad=(0,0), no_bias=True, name='dis_conv5')
-    #  logits = mx.sym.Convolution(leaky3, num_filter=1, kernel=(8,8), stride=(1,1), pad=(0,0), no_bias=True, name='dis_out')
 
     logits = mx.sym.Flatten(conv5)
 
-    CE, logits_sigmoid = loss.sigmoid_cross_entropy(logits, label, batch_size)
+    CE, logits_sigmoid = loss.sigmoid_cross_entropy(logits, label)
+    CE_loss = mx.sym.BlockGrad(CE)
 
-    CE_loss = mx.sym.MakeLoss(CE)
-    out = mx.sym.Group([CE_loss, mx.sym.BlockGrad(logits_sigmoid)])
-    #  out = mx.sym.Group([CE_loss, mx.sym.BlockGrad(logits.reshape(shape=(-1,1)))])
+    logit_regression = mx.sym.LogisticRegressionOutput(data=logits, label=label, name='dloss')
+    out = mx.sym.Group([CE_loss, mx.sym.BlockGrad(logits_sigmoid), logit_regression])
 
     return out
 
 
 
-if __name__ == "__main__":
-    import config
-    import core.IO as IO
-    batch_size = config.batch_size
-    img_size = config.img_size
-
-    img = mx.sym.var('img')
-    dis = discriminator_conv(img, batch_size)
-    mod = mx.mod.Module(dis, context=mx.cpu(), data_names=['img'], label_names=None)
-    mod.bind(data_shapes=[('img',(batch_size,1,img_size,img_size))], label_shapes=None)
-    mod.init_params(mx.initializer.Xavier())
-
-    it = IO.get_mnist_iter()
-    #  batch = it.next()[0]
-    for img, label in it:
-        print(img.shape)
-        print(label.shape)
-
-        batch = mx.io.DataBatch([img], label=None)
-
-        mod.forward(batch)
-
-        out = mod.get_outputs()
-        print(out[0])
-
-        break
 
 
 

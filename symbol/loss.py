@@ -39,7 +39,7 @@ def softmax_cross_entropy_binary(pred, label, batch_size):
     return out/batch_size
 
 
-def sigmoid_cross_entropy(logits, label, batch_size):
+def sigmoid_cross_entropy(logits, label):
     '''
     used in binary case naturally
     '''
@@ -47,50 +47,9 @@ def sigmoid_cross_entropy(logits, label, batch_size):
     logits_sigmoid_log_real = mx.sym.log(logits_sigmoid)
     logits_sigmoid_log_fake = mx.sym.log(1-logits_sigmoid)
     product = logits_sigmoid_log_real*label + logits_sigmoid_log_fake*(1-label)
-    CE = -mx.sym.sum(product)/batch_size
+    CE = -mx.sym.mean(product)
 
     return [CE, logits_sigmoid]
-
-
-
-def gan_loss(real_batch, fake_batch, batch_size):
-    '''
-    compute the softmax cross entropy loss of a gan. All symbols along the path
-    to the module sym should not overlap with their names. Thus for discriminator
-    loss, the discriminator_conv() method should not be reused, and the input
-    symbols should be concated instead.
-
-    params:
-        real_batch: a symbol of the real image data batch
-        fake_batch: a symbol of the fake image data generated from noise
-        batch_size: the batch size of the two batches (assume they have
-        identical batch size)
-    '''
-    # discriminator loss
-    batch_all = mx.sym.concat(real_batch, fake_batch, dim=0)
-    dis_all = discriminator.discriminator_conv(batch_all, batch_size)
-
-    label_dis_real = mx.sym.ones((batch_size, 1))
-    label_dis_fake = mx.sym.zeros((batch_size, 1))
-    label_dis_all = mx.sym.concat(label_dis_real, label_dis_fake, dim=0)
-
-    #  loss_D = softmax_cross_entropy_binary(dis_all, label_dis_all, 2*batch_size)
-    loss_D = sigmoid_cross_entropy(dis_all, label_dis_all, 2*batch_size)
-    loss_D = mx.sym.MakeLoss(loss_D)
-
-    out = mx.sym.BlockGrad(dis_all)
-
-    loss_D = mx.sym.Group([loss_D, out])
-
-
-    # generator loss
-    dis_gen = discriminator.discriminator_conv(fake_batch, batch_size)
-    label_gen = mx.sym.ones((batch_size, 1))
-    #  loss_G = softmax_cross_entropy_binary(dis_gen, label_gen, batch_size)
-    loss_G = sigmoid_cross_entropy(dis_gen, label_gen, batch_size)
-    loss_G = mx.sym.MakeLoss(loss_G)
-
-    return loss_D, loss_G
 
 
 
