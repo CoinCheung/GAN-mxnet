@@ -2,9 +2,7 @@
 
 
 import mxnet as mx
-import numpy as np
 import core.config as config
-import core.visualize
 
 
 def generator_lenet5(noise, batch_size, img_channels, eps):
@@ -86,30 +84,4 @@ def generator_conv(noise, batch_size, nc, eps):
 
 
 
-
-
-if __name__ == "__main__":
-    #  out = gen_noise_uniform((1, 4), [-1,1])
-    #  print(out)
-
-
-    eps = config.bn_eps
-    test = config.is_test
-    batch_size = config.batch_size
-
-    noise = mx.sym.var("noise")
-
-    noise_batch = gen_noise_uniform((batch_size,1024),(-1,1))
-    img = generator_conv(noise, batch_size, test, eps)
-    gen = mx.mod.Module(img, context=mx.cpu(), data_names=["noise"], label_names=None)
-    gen.bind(data_shapes=[('noise',(batch_size,1024))], label_shapes=None)
-    gen.init_params()
-
-    batch = mx.io.DataBatch([noise_batch], label=None)
-    #  print(batch)
-
-    gen.forward(batch)
-    out = gen.get_outputs()[0]
-    print(out.asnumpy().shape)
-    plot.show_image(out.asnumpy())
 

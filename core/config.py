@@ -1,6 +1,6 @@
 
 '''
-    when it works with usual discriminator and generator, a weigth_decay of 1e-4 works generally better
+    when it works with lenet5 discriminator and generator, a weigth_decay of 1e-4 works generally better
 '''
 
 #  discriminator_type = 'lenet5'
@@ -19,8 +19,6 @@ noise_shape = (batch_size,100,1,1)
 
 
 # training control parameters
-train_gen_iternums = 1
-train_dis_iternums = 1
 epoch = 10
 save_each_epoch = 5
 
@@ -31,7 +29,6 @@ dis_optimizer = 'adam'
 # normal gan
 gen_optimizer_params = (('learning_rate', 2e-4), ('beta1',0.5), ('wd', 1e-4))
 dis_optimizer_params = (('learning_rate',2e-4),('beta1', 0.5),('wd', 1e-4))
-
 #  # dc gan
 #  gen_optimizer_params = (('learning_rate', 2e-4), ('beta1',0.5), ('wd', 0))
 #  dis_optimizer_params = (('learning_rate',2e-4),('beta1', 0.5),('wd', 0))

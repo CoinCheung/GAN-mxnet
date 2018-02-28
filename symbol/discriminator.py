@@ -2,7 +2,6 @@
 
 
 import mxnet as mx
-import numpy as np
 import symbol.loss as loss
 
 
@@ -21,7 +20,6 @@ def discriminator_lenet5(img, label, batch_size, leaky_slope):
     leaky3 = mx.sym.LeakyReLU(conv3, act_type='leaky', slope=leaky_slope, name='dis_leaky_relu3')
     maxpool3 = mx.sym.Pooling(leaky3, kernel=(2,2), pool_type='max', stride=[2,2], name='dis_max_pooling3')
     # 8x8x128
-    #  reshaped = mx.sym.reshape(maxpool3, shape=(batch_size, -1))
     flatten = mx.sym.Flatten(maxpool3)
 
     fc1 = mx.sym.FullyConnected(flatten, num_hidden=4*4*64, no_bias=False, flatten=True, name='dis_fc1')
@@ -67,8 +65,11 @@ def discriminator_conv(img, label, batch_size, eps, leaky_slope):
     CE, logits_sigmoid = loss.sigmoid_cross_entropy(logits, label)
     CE_loss = mx.sym.BlockGrad(CE)
 
-    logit_regression = mx.sym.LogisticRegressionOutput(data=logits, label=label, name='dloss')
+    logit_regression = mx.sym.MakeLoss(CE)
     out = mx.sym.Group([CE_loss, mx.sym.BlockGrad(logits_sigmoid), logit_regression])
+
+    #  logit_regression = mx.sym.LogisticRegressionOutput(data=logits, label=label, name='dloss')
+    #  out = mx.sym.Group([CE_loss, mx.sym.BlockGrad(logits_sigmoid), logit_regression])
 
     return out
 

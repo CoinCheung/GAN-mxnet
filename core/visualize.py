@@ -57,39 +57,13 @@ def draw_loss(loss, titles, fig_num):
     plt.show()
 
 
-def draw_acc(acc, titles, fig_num):
-    pass
-
 
 
 if __name__ == "__main__":
-    #  arr = np.random.randint(0,255,(32,32,4),dtype=np.uint8)
     arr = np.random.rand(32,32)
-    #  fig = plt.figure()
-    #  plt.imshow(arr)
-    #  pylab.show()
-    pass
 
     y1 = np.ones((10,))
     y2 = np.ones((12,))
-
-    #  draw_loss([y1, y2])
-
-    #  x = np.arange(100)
-    #  y = np.sin(x)
-    #
-    #  # 表示2x2的子图布局，上下x坐标对齐，一下y坐标对齐
-    #  _, ax = plt.subplots(2,2, sharex=True, sharey=True)
-    #  ax[0][0].plot(x,y)
-    #  ax[0][0].set_title("ddd")
-    #  ax[1][0].plot(x,y)
-    #  ax[1][0].set_title("ddd")
-    #  ax[0][1].plot(x,y)
-    #  ax[0][1].set_title("ddd")
-    #  ax[1][1].plot(x,y)
-    #  ax[1][1].set_title("ddd")
-    #  plt.show()
-
 
     imhd = ImgGrids(3)
     for i in range(15):

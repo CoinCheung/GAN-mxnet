@@ -2,10 +2,6 @@
 
 
 import mxnet as mx
-import symbol.discriminator
-import symbol.generator
-import core.DataIter
-import core.config as config
 
 
 
@@ -16,7 +12,7 @@ def softmax(pred):
     params:
         pred: the output scores of some network, of shape [batch_size, n]
     '''
-    pred_exp = mx.sym.exp(pred)
+    pred_exp = mx.sym.exp(pred-mx.sym.max(pred, axis=1))
     return mx.sym.broadcast_div(pred_exp, mx.sym.sum(pred_exp, axis=1, keepdims=True))
 
 
@@ -43,65 +39,19 @@ def sigmoid_cross_entropy(logits, label):
     '''
     used in binary case naturally
     '''
+
     logits_sigmoid = mx.sym.sigmoid(logits).reshape(shape=(-1, 1))
-    logits_sigmoid_log_real = mx.sym.log(logits_sigmoid)
-    logits_sigmoid_log_fake = mx.sym.log(1-logits_sigmoid)
-    product = logits_sigmoid_log_real*label + logits_sigmoid_log_fake*(1-label)
-    CE = -mx.sym.mean(product)
+
+    product = mx.sym.relu(logits) - logits*label + mx.sym.log(1+mx.sym.exp(-mx.sym.abs(logits)) )
+    #  product = logits - logits*label - mx.sym.log(mx.sym.sigmoid(logits) + (1e-12))
+# TODO: see if sigmoid adding max and abs can do, see if no 1e-12 can do
+
+# without 1e-12, the distracted model can still be converged after some iters
+# training. But the generated characters are not clear
+
+    CE = mx.sym.mean(product)
 
     return [CE, logits_sigmoid]
-
-
-
-if __name__ == "__main__":
-
-
-    # params
-    eps = config.bn_eps
-    test = config.is_test
-    batch_size = config.batch_size
-    img_size = config.img_size
-
-    # syms
-    real_batch = mx.sym.var('real_batch')
-    noise = mx.sym.var("noise")
-    fake_batch = generator.generator_conv(noise, batch_size, test, eps)
-    loss_D, loss_G = gan_loss(real_batch, fake_batch, batch_size)
-
-    # datas iters
-    it = IO.get_mnist_iter()
-
-    # modules
-    gen = mx.mod.Module(loss_G, context=mx.cpu(), data_names=['noise'], label_names=None)
-    gen.bind(data_shapes=[('noise',(batch_size, 1024))], label_shapes=None)
-    gen.init_params(mx.initializer.Xavier())
-
-    dis = mx.mod.Module(loss_D, context=mx.cpu(), data_names=['real_batch', 'noise'], label_names=None)
-    dis.bind(data_shapes=[('real_batch',(batch_size,1,img_size,img_size)), ('noise', (batch_size,1024))], label_shapes=None)
-    dis.init_params(mx.initializer.Xavier())
-
-    # compute loss values
-    for img,label in it:
-        noise_array = generator.gen_noise_uniform((batch_size,1024),(-1,1))
-        dis_batch = mx.io.DataBatch([img, noise_array], label=None)
-        gen_batch = mx.io.DataBatch([noise_array], label=None)
-
-        gen.forward(gen_batch)
-        dis.forward(dis_batch)
-
-        lossG = gen.get_outputs()[0]
-        lossD = dis.get_outputs()[0]
-
-        print(lossG.asnumpy())
-        print(lossD.asnumpy())
-
-        #
-        temp = dis.get_outputs()[1].asnumpy().shape
-        print(temp)
-
-
-        break
-
 
 
 

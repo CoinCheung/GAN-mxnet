@@ -1,3 +1,4 @@
-/record/*.params
-/record/*.states
-/record/*.json
+/model_export/*.params
+/model_export/*.states
+/model_export/*.json
+/cffi/
