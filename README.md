@@ -34,7 +34,7 @@ For the ease of computation and generalizing to other datasets with different da
 
 ### Training
 1. A bit configuration  
-* Choosing models
+* Choosing models  
 If Lenet-5 based models are to be used, one should open the file core/config.py and uncomment the line with 'lenet5' and comment the line with 'deep_convolution':
 ```python
     discriminator_type = 'lenet5'
@@ -44,7 +44,7 @@ If Lenet-5 based models are to be used, one should open the file core/config.py 
 If deep convolution network models are to be used, one will need to carry out the otherwise comment behavior.
 
 * Draw the generated pictures  
-By assigning the variable *if_drawing* in the file core/config.py to be 'True', one could see the generated pictures plotted.
+By assigning the variable 'if_drawing' in the file core/config.py to be 'True', one could see the generated pictures plotted every several iterations. The period of plotting can be assigned by the variable 'draw_iter__num'.
 
 * Save models periodically  
 By default, the models will be saved to the directory of model_export each 5 epoches. One could switch off the saving function by assigning the variable if_save_params to be False in the file core/config.py.
