@@ -1,7 +1,7 @@
 
 
-discriminator_type = 'lenet5'
-#  discriminator_type = 'deep_convolution'
+#  discriminator_type = 'lenet5'
+discriminator_type = 'fcn'
 
 # layer symbol parameters
 bn_eps = 1e-5
@@ -28,10 +28,10 @@ draw_iter_num = 50
 gen_optimizer = 'adam'
 dis_optimizer = 'adam'
 # normal gan
-gen_optimizer_params = (('learning_rate', 2e-4), ('beta1',0.5), ('wd', 5e-5))
-dis_optimizer_params = (('learning_rate',2e-4),('beta1', 0.5),('wd', 5e-5))
+#  gen_optimizer_params = (('learning_rate', 2e-4), ('beta1',0.5), ('wd', 1e-5))
+#  dis_optimizer_params = (('learning_rate',2e-4),('beta1', 0.5),('wd', 1e-5))
 # dc gan
-#  gen_optimizer_params = (('learning_rate', 2e-4), ('beta1',0.5), ('wd', 0))
-#  dis_optimizer_params = (('learning_rate',2e-4),('beta1', 0.5),('wd', 0))
+gen_optimizer_params = (('learning_rate', 2e-4), ('beta1',0.5), ('wd', 0))
+dis_optimizer_params = (('learning_rate',2e-4),('beta1', 0.5),('wd', 0))
 
 

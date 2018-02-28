@@ -54,7 +54,7 @@ def get_lenet5_modules():
 
     return gen, dis
 
-def get_dc_modules():
+def get_fcn_modules():
     # parameters
     eps = config.bn_eps
     batch_size = config.batch_size
@@ -71,8 +71,8 @@ def get_dc_modules():
     img = mx.sym.var('image')
     label = mx.sym.var('label')
     noise = mx.sym.var("noise")
-    gen_batch_sym = generator.generator_conv(noise, batch_size, nc, eps)
-    dis_sigmoid_loss = discriminator.discriminator_conv(img, label, batch_size*2, eps, lky_slope)
+    gen_batch_sym = generator.generator_fcn(noise, batch_size, nc, eps)
+    dis_sigmoid_loss = discriminator.discriminator_fcn(img, label, batch_size*2, eps, lky_slope)
     ## modules
     # generator
     gen = mx.mod.Module(gen_batch_sym, context=mx.gpu(), data_names=['noise'], label_names=None)
@@ -111,8 +111,8 @@ def get_modules():
     if discriminator_type == 'lenet5':
         return get_lenet5_modules()
 
-    elif discriminator_type == 'deep_convolution':
-        return get_dc_modules()
+    elif discriminator_type == 'fcn':
+        return get_fcn_modules()
 
 
 

@@ -35,7 +35,7 @@ def discriminator_lenet5(img, label, batch_size, leaky_slope):
     return out
 
 
-def discriminator_conv(img, label, batch_size, eps, leaky_slope):
+def discriminator_fcn(img, label, batch_size, eps, leaky_slope):
     '''
         input image shape should be 64x64xnc
         TODO: make clear the layout of the tensor

@@ -49,7 +49,7 @@ def generator_lenet5(noise, batch_size, img_channels, eps):
     return out
 
 
-def generator_conv(noise, batch_size, nc, eps):
+def generator_fcn(noise, batch_size, nc, eps):
     '''
         symbol noise has a shape of batch_sizexncx1x1
     '''
