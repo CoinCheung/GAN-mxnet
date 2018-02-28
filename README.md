@@ -8,22 +8,22 @@ Two sort of network structures are supported: Lenet-5 and deep convolution.
 1. discriminators
 The discriminator structure of Lenet-5 based model is as follows:
 
-    1) **Convolutional layer**: 32 filters of 5x5, stride 1, pad 0, 0.2 slope leaky relu 
-    2) **Max pooling layer**: window size 2x2, stride 2
-    3) **Convolutional layer**, 64 filters of 5x5, stride 1, pad 0, 0.2 slope leaky relu
-    4) **Max pooling layer**: window size 2x2, stride 2
-    5) **Convolutional layer**, 128 filters of 5x5, stride 1, pad 0, 0.2 slope leaky relu
-    6) **Max pooling layer**:  window size 2x2, stride 2, Flatten
-    7) **Dense layer**: 1024 hidden nodes, 0.2 slope leaky relu
-    8) **Dense layer**: 1 hidden nodes
+* **Convolutional layer**: 32 filters of 5x5, stride 1, pad 0, 0.2 slope leaky relu 
+* **Max pooling layer**: window size 2x2, stride 2
+* **Convolutional layer**, 64 filters of 5x5, stride 1, pad 0, 0.2 slope leaky relu
+* **Max pooling layer**: window size 2x2, stride 2
+* **Convolutional layer**, 128 filters of 5x5, stride 1, pad 0, 0.2 slope leaky relu
+* **Max pooling layer**:  window size 2x2, stride 2, Flatten
+* **Dense layer**: 1024 hidden nodes, 0.2 slope leaky relu
+* **Dense layer**: 1 hidden node
 
 The deep convolution network based model has the discriminator structure as follows:
 
-    1) **Convolutional layer**: 128 filters of 4x4, stride 2, pad 1, 0.2 slope leaky relu
-    2) **Convolutional layer**: 256 filters of 4x4, stride 2, pad 1, BatchNorm, 0.2 slope leaky relu
-    3) **Convolutional layer**: 512 filters of 4x4, stride 2, pad 1, BatchNorm, 0.2 slope leaky relu
-    4) **Convolutional layer**: 1024 filters of 4x4, stride 2, pad 1, BatchNorm, 0.2 slope leaky relu
-    5) **Convolutional layer**: 1 filters of 4x4, stride 1, pad 0
+* **Convolutional layer**: 128 filters of 4x4, stride 2, pad 1, 0.2 slope leaky relu
+* **Convolutional layer**: 256 filters of 4x4, stride 2, pad 1, BatchNorm, 0.2 slope leaky relu
+* **Convolutional layer**: 512 filters of 4x4, stride 2, pad 1, BatchNorm, 0.2 slope leaky relu
+* **Convolutional layer**: 1024 filters of 4x4, stride 2, pad 1, BatchNorm, 0.2 slope leaky relu
+* **Convolutional layer**: 1 filters of 4x4, stride 1, pad 0
 
 2. generators
 As for the generators, they always have the structures opposite to their discriminator counterpart.  
@@ -38,7 +38,6 @@ If Lenet-5 based models are to be used, one should open the file core/config.py 
     discriminator_type = 'lenet5'
     # discriminator_type = 'deep_convolution'
 
-#TODO: See if optimizer hyper parameters are different between the two models. 
 ```
 If deep convolution network models are to be used, one will need to carry out the otherwise comment behavior.
 

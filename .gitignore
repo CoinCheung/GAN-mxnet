@@ -2,7 +2,7 @@
 /model_export/*.states
 /model_export/*.json
 /cffi/
-/TODO
-/try.py
 /screenshot/
+TODO
+try.py
 Makefile
