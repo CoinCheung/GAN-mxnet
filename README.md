@@ -10,7 +10,7 @@ The discriminator structure of Lenet-5 based model is as follows:
 
 * **Convolutional layer**: 32 filters of 5x5, stride 1, pad 0, 0.2 slope leaky relu 
 * **Max pooling layer**: window size 2x2, stride 2
-* **Convolutional layer**, 64 filters of 5x5, stride 1, pad 0, 0.2 slope leaky relu
+* **Convolutional layer**: 64 filters of 5x5, stride 1, pad 0, 0.2 slope leaky relu
 * **Max pooling layer**: window size 2x2, stride 2
 * **Convolutional layer**: 128 filters of 5x5, stride 1, pad 0, 0.2 slope leaky relu
 * **Max pooling layer**:  window size 2x2, stride 2, Flatten
@@ -44,10 +44,12 @@ If Lenet-5 based models are to be used, one should open the file core/config.py 
 If deep convolution network models are to be used, one will need to carry out the otherwise comment behavior.
 
 * Draw the generated pictures  
-By assigning the variable 'if_drawing' in the file core/config.py to be 'True', one could see the generated pictures plotted every several iterations. The period of plotting can be assigned by the variable 'draw_iter__num'.
+By assigning the variable 'if_drawing' in the file core/config.py to be 'True', one could see the generated pictures plotted every several iterations. The period of plotting can be assigned by the variable 'draw_iter_num'.
 
 * Save models periodically  
 By default, the models will be saved to the directory of model_export each 5 epoches. One could switch off the saving function by assigning the variable if_save_params to be False in the file core/config.py.
+
+There are also other behaviors supported, one may swich on/off them in the file core/config.py.
 
 
 2. Train the network  
