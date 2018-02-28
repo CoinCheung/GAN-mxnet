@@ -1,10 +1,6 @@
 #!/usr/bin/python
 
 
-from cffi.cwrapper import ffi, lib
-
-lib.resize_wrap()
-
 
 import core.DataIter as DI
 import mxnet as mx

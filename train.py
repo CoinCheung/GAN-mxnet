@@ -19,10 +19,11 @@ def train_gan(draw=True):
     epoch = config.epoch
     batch_size = config.batch_size
     noise_shape = config.noise_shape
-    save_epoch_num = config.save_each_epoch
     save_path = ''.join([os.getcwd(), '/model_export/'])
-    print_iters = 50
-    draw_iters = 50
+    print_iters = config.print_iter_num
+    draw_iters = config.draw_iter_num
+    if_save = config.if_save_params
+    save_epoch_num = config.save_each_epoch
 
 
     ## get modules
@@ -86,6 +87,7 @@ def train_gan(draw=True):
             lossG.append(dis.get_outputs()[0].asnumpy())
 
 
+            # print and draw the generated pictures
             i += 1
             if i % print_iters == 0:
                 lossD_val = lossD[-1]
@@ -98,17 +100,18 @@ def train_gan(draw=True):
                 ImgHandler.draw(img_data[:64])
 
         ## save params
-        if e != 0 and e % save_epoch_num == 0:
-            gen.save_checkpoint(save_path+'gen', 0, True)
-            dis.save_checkpoint(save_path+'dis', 0, True)
+        if if_save and (e!=0) and (e%save_epoch_num==0):
+            gen.save_checkpoint(save_path+'gen', e, True)
+            dis.save_checkpoint(save_path+'dis', e, True)
 
-    visualize.draw_loss([np.array(lossD),np.array(lossG)], ['lossD','lossG'], 2)
+    visualize.draw_curve([np.array(lossD),np.array(lossG)], ['lossD','lossG'], 2)
 
 
 
 
 if __name__ == "__main__":
-    train_gan(draw=True)
+    if_drawing = config.if_drawing
+    train_gan(draw=if_drawing)
 
 
 

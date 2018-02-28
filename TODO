@@ -1,8 +1,8 @@
 
 1. see if dc gan xavier can do -- done, thought initial loss gets largers
 2. refactoring the code and draw different hyper-parameters out to config
-3. add grad trunct and see if this can do for the nan, and see what cause the loss to be nan
+3. add grad trunct and see if this can do for the nan, and see what cause the loss to be nan -- done
 4. see if bn_eps = 1e-5 instead of 1e-5+1e-12 can do 
-5. see other difference between self-defined loss and the logisticRegressOutput(), and what causes these performance and stability differences
+5. see other difference between self-defined loss and the logisticRegressOutput(), and what causes these performance and stability differences -- done
 
 6. change draw_loss name and use it to draw acc, and add annonations

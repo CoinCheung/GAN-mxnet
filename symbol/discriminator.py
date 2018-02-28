@@ -68,9 +68,6 @@ def discriminator_conv(img, label, batch_size, eps, leaky_slope):
     logit_regression = mx.sym.MakeLoss(CE)
     out = mx.sym.Group([CE_loss, mx.sym.BlockGrad(logits_sigmoid), logit_regression])
 
-    #  logit_regression = mx.sym.LogisticRegressionOutput(data=logits, label=label, name='dloss')
-    #  out = mx.sym.Group([CE_loss, mx.sym.BlockGrad(logits_sigmoid), logit_regression])
-
     return out
 
 

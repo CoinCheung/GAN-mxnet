@@ -1,13 +1,10 @@
 
-'''
-    when it works with lenet5 discriminator and generator, a weigth_decay of 1e-4 works generally better
-'''
 
-#  discriminator_type = 'lenet5'
-discriminator_type = 'deep_convolution'
+discriminator_type = 'lenet5'
+#  discriminator_type = 'deep_convolution'
 
 # layer symbol parameters
-bn_eps = 1e-5 + 1e-12
+bn_eps = 1e-5
 leaky_slope = 0.2
 
 
@@ -20,16 +17,20 @@ noise_shape = (batch_size,100,1,1)
 
 # training control parameters
 epoch = 10
+if_save_params = True
 save_each_epoch = 5
+if_drawing = True
+print_iter_num = 50
+draw_iter_num = 50
 
 
 # optimizer parameters
 gen_optimizer = 'adam'
 dis_optimizer = 'adam'
 # normal gan
-gen_optimizer_params = (('learning_rate', 2e-4), ('beta1',0.5), ('wd', 1e-4))
-dis_optimizer_params = (('learning_rate',2e-4),('beta1', 0.5),('wd', 1e-4))
-#  # dc gan
+gen_optimizer_params = (('learning_rate', 2e-4), ('beta1',0.5), ('wd', 5e-5))
+dis_optimizer_params = (('learning_rate',2e-4),('beta1', 0.5),('wd', 5e-5))
+# dc gan
 #  gen_optimizer_params = (('learning_rate', 2e-4), ('beta1',0.5), ('wd', 0))
 #  dis_optimizer_params = (('learning_rate',2e-4),('beta1', 0.5),('wd', 0))
 

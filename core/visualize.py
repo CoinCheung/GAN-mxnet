@@ -44,16 +44,17 @@ class ImgGrids(object):
 
 
 
-def draw_loss(loss, titles, fig_num):
-    subnum = len(loss)
+def draw_curve(data_list, titles, fig_num):
+    subnum = len(data_list)
 
     _, ax = plt.subplots(subnum,1, num=fig_num, sharex=False,sharey=False)
     plt.ioff()
     for sn in range(subnum):
-        x = np.arange(loss[sn].shape[0])
-        y = loss[sn]
+        x = np.arange(data_list[sn].shape[0])
+        y = data_list[sn]
         ax[sn].plot(x,y)
         ax[sn].set_title(titles[sn])
+    plt.tight_layout()
     plt.show()
 
 

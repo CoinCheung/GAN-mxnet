@@ -16,6 +16,3 @@ def dis_acc(sigmoid_true, sigmoid_fake):
 
     return acc_real, acc_fake
 
-
-
-

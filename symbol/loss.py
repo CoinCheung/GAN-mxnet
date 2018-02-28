@@ -42,17 +42,9 @@ def sigmoid_cross_entropy(logits, label):
 
     logits_sigmoid = mx.sym.sigmoid(logits).reshape(shape=(-1, 1))
 
-    product = mx.sym.relu(logits) - logits*label + mx.sym.log(1+mx.sym.exp(-mx.sym.abs(logits)) )
-    #  product = logits - logits*label - mx.sym.log(mx.sym.sigmoid(logits) + (1e-12))
-# TODO: see if sigmoid adding max and abs can do, see if no 1e-12 can do
-
-# without 1e-12, the distracted model can still be converged after some iters
-# training. But the generated characters are not clear
+    #  product = mx.sym.relu(logits) - logits*label + mx.sym.log(1+mx.sym.exp(-mx.sym.abs(logits))+(1e-12))
+    product = mx.sym.relu(logits) - logits*label - mx.sym.log(mx.sym.sigmoid(mx.sym.abs(logits)) + (1e-12))
 
     CE = mx.sym.mean(product)
 
     return [CE, logits_sigmoid]
-
-
-
-

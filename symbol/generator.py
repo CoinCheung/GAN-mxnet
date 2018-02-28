@@ -10,17 +10,14 @@ def generator_lenet5(noise, batch_size, img_channels, eps):
     generator of the GAN basing on deconvolution layers.
     The structure is:
         1. fc layer of size 1024 + BN + ReLU
-        2. fc of size 7 x 7 x 128 + BN + ReLU
+        2. fc of size 8 x 8 x 128 + BN + ReLU
         3. Resize into Image Tensor
-        4. transposed conv2 layer with 64 filters of 4x4, stride 2 + BN + ReLU
-        5. transposed conv2 layer with 1 filters of 4x4, stride 2 + BN + ReLU
+        4. transposed conv2 layer with 64 filters of 4x4, stride 2, pad 1 + BN + ReLU
+        5. transposed conv2 layer with 1 filters of 4x4, stride 2, pad 1 + BN + ReLU
     params:
         noise: a symbol standing for input random noise
         batch_size: the batch size of the generated examples
         eps: the eps assigned to mx.sym.BatchNorm()
-    '''
-    '''
-    TODO: update innovation
     '''
 
     fix_gamma = True
