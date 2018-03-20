@@ -70,6 +70,6 @@ if __name__ == "__main__":
     for i in range(15):
         img = np.random.rand(16,1,28,28)
         imhd.draw(img)
-    dd = input()
+        show_image(img, 1)
 
 
