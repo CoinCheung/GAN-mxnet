@@ -2,6 +2,9 @@
 
 This is a mxnet implementation of GAN for the purpose of generating MNIST dataset pictures.
 
+# Original GAN structure
+
+
 ### About the model
 Two sort of network structures are supported: Lenet-5 and deep convolution.
 
@@ -63,3 +66,36 @@ In general, the Lenet-5 based models will train faster than the deep convolution
 After the process of training, the losses of the generator and discriminator will be plotted which may indicate the state of training.
 
 
+
+## Conditional GAN structure
+A conditional GAN(CGAN) is also provided to generate MNIST pictures. One obvious advantage of CGANs is that they allow the user to manipulate the behavior of the model. In this project, by assigning the condition to be the number classes to which the pictures belong to, we could control which numbers the generator generates in the pictures.
+
+
+### Training
+Simply go the root directory of the CGAN, and run the training script:
+```sh
+    $ cd GAN-mxnet/CGAN
+    $ python3 train.py
+```
+After training for less than an hour on gpus, the models should converge. The trained models will be exported to the directory of ```GAN-mxnet/CGAN/model-export```.
+
+
+### Test
+In the same directory, run the ```test.py``` script:
+```sh
+    $ python3 test.py
+```
+One will see that the model generates the picutures as assigned instead of randomly.
+
+
+
+
+## Tips:
+Here are the things I did for fine tuning which makes the generated pictures look better:
+1. **No weight decay**, weight decay works the same as L2 regularization. It seems to work better in the classification tasks, but for the GAN training tasks.
+2. **No leaky relu for generator**, leaky relu activation can be used in discriminators but they work not well for generators. So for generators, it is better to simply use plain relu activations.
+3. **noise ranges**, It turns out that the generator with input noises drawn from the space [0, 1] works not as well as that with noises picked from the symmetric ragion [-1, 1]. 
+
+
+
+I might have the wrong skills of training a GAN. If there are errors in these tips, please let me know and I will changes them as well as my comprehensions.

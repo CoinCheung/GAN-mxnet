@@ -111,6 +111,7 @@ def train_gan(draw=True):
 
 if __name__ == "__main__":
     if_drawing = config.if_drawing
+    os.mkdir(os.getcwd()+'/model_export')
     train_gan(draw=if_drawing)
 
 
