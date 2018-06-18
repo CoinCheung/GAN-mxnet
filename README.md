@@ -91,7 +91,7 @@ One will see that the model generates the picutures as assigned instead of rando
 
 
 ## Tips:
-Here are the things I did for fine tuning which makes the generated pictures look better:
+Here are the tricks I used to make the generated pictures look better:
 1. **No weight decay**, weight decay works the same as L2 regularization. It seems to work better in the classification tasks, but for the GAN training tasks.
 2. **No leaky relu for generator**, leaky relu activation can be used in discriminators but they work not well for generators. So for generators, it is better to simply use plain relu activations. From other models, a conclusion might be drawn that: if you implement upsampling, you should use plain relu activation, and if you do downsampling you could have a try of leaky relu activation.
 3. **noise ranges**, It turns out that the generator with input noises drawn from the space [0, 1] works not as well as that with noises picked from the symmetric ragion [-1, 1]. 
